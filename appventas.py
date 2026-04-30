@@ -1,4 +1,8 @@
 import streamlit as st
+from database import crear_tablas, guardar_venta
+from datetime import datetime
+
+crear_tablas()
 
 st.set_page_config(
     page_title="Panadería Marcos",
@@ -103,6 +107,21 @@ with col2:
     )
 
     if st.button("Comprar"):
-        st.success("✅ Compra realizada")
+
+     if len(st.session_state.carrito) > 0:
+
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        guardar_venta(
+            fecha,
+            total,
+            st.session_state.carrito
+        )
+
+        st.success("✅ Venta guardada correctamente")
+
         st.session_state.carrito = []
         st.rerun()
+
+    else:
+        st.warning("Carrito vacío")
