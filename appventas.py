@@ -2,13 +2,36 @@ import streamlit as st
 from database import crear_tablas, guardar_venta
 from datetime import datetime
 
-crear_tablas()
-
 st.set_page_config(
     page_title="Panadería Marcos",
     page_icon="🍞",
     layout="wide"
 )
+
+crear_tablas()
+
+if "login" not in st.session_state:
+    st.session_state.login = False
+
+if not st.session_state.login:
+
+    st.title("🔐 Acceso Administrador")
+
+    usuario = st.text_input("Usuario")
+    password = st.text_input("Contraseña", type="password")
+
+    if st.button("Ingresar"):
+        if usuario == "admin" and password == "1234":
+            st.session_state.login = True
+            st.rerun()
+        else:
+            st.error("Datos incorrectos")
+
+    st.stop()
+
+if st.button("Cerrar sesión"):
+    st.session_state.login = False
+    st.rerun()
 
 # CSS visual
 st.markdown("""
